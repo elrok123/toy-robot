@@ -11,6 +11,7 @@ class ToyRobot
         # Split our command into segments to be further parsed
         command_segments = command_string.split(" ")
 
+        # Iterate over each command segment with the current index (i)
         command_segments.each_with_index do |command_segment, i|
             case command_segment.to_sym
             when :MOVE
@@ -21,6 +22,7 @@ class ToyRobot
 
                 this.place x_position, y_position 
             when :REPORT
+
             end
         end
     end
@@ -36,9 +38,10 @@ class ToyRobot
 
     # Function to take an X and Y co-ordinate to place the robot at along with a resulting direction to face in
     def place(x, y, direction_to_face)
-        if 
+        if @table.valid_destination x, y, direction_to_face  
             return true
             return false
+        end
     end
     
     # Function to report the robot's current X and Y co-ordinates and the direction it's facing
