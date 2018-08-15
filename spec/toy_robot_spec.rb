@@ -1,9 +1,13 @@
-require "./lib/ToyRobot.rb"
+require "./lib/ToyRobot"
+require "./lib/Table"
 
 describe "ToyRobot" do
     describe ".new" do
-        it "should create a new instance of ToyRobot" do
-            toy_robot = ToyRobot.new 
+        context "when given a table object"
+            it "should create a new instance of ToyRobot" do
+                table = Table.new(5, 5)
+                toy_robot = ToyRobot.new(table)
+            end
         end
     end
 end
