@@ -38,15 +38,13 @@ class ToyRobot
             when :MOVE
                 self.move
             when :PLACE
-                # Get our two position params from our command segments
-                x_position = command_segments[i+1].tr(",", "").tr(" ", "").to_i
-                y_position = command_segments[i+2].tr(",", "").tr(" ", "").to_i
-
-                # Get the direction that we want the robot to be facing when placed
-                direction_to_face = command_segments[i+3]
+                # Get our X, Y and direction information from the command params
+                place_params = self.get_command_coords_and_direction(command_segments, i)
 
                 # Pass the X and Y co-ordinates to the place method
-                self.place x_position, y_position, direction_to_face 
+                if place_params != false
+                    self.place place_params[:x], place_params[:y], place_params[:direction]
+                end
             when :LEFT
                 self.rotate :left
             when :RIGHT
@@ -54,6 +52,52 @@ class ToyRobot
             when :REPORT
                 self.report
             end
+        end
+    end
+
+    # Function to get x and y coordinates along with the direction from a PLACE command's params
+    def get_command_coords_and_direction(command_segments, index)
+        if command_segments[index+1].include? ","
+            
+            # Get our x coord from the first param
+            params = command_segments[index+1].split(",")
+
+            if self.is_numeric? params[0]
+                # Set our x coord from the first split element
+                x_coord = params[0].to_i
+            else
+                # If no y coord was found, return an error
+                puts "Invalid X co-ordinate given to the PLACE command, skipping command..."
+                return false
+            end
+            
+
+            # Check if the second paramater is numberic and if so use that as our y coord
+            if !params[1].nil? 
+                # Strip comma
+                y_coord = params[index+2].to_i 
+            elsif self.is_numeric? command_segments[index+2].tr!(",", "")
+                # If we found the y coord in the next command segment use this
+                y_coord = command_segments[index+2].to_i
+            else
+                # If no y coord was found, return an error
+                puts "Invalid Y co-ordinate given to the PLACE command, skipping command..."
+                return false
+            end
+
+            # Check if we have a direction to face as well
+            if !params[2].nil? && !params[2] == ""
+                direction = params[2].tr(" ")
+                return {x: x_coord, y: y_coord, direction: direction}
+            elsif command_segments[index+3] == "NORTH" || command_segments[index+3] == "EAST" || command_segments[index+3] == "SOUTH" || command_segments[index+3] == "WEST"
+                direction = command_segments[index+3]
+                return {x: x_coord, y: y_coord, direction: direction}
+            else
+                puts "Invalid direction given to the PLACE command, skipping command"
+                return false
+            end
+        else
+            command_segments[i+1].tr(",", "").tr(" ", "").to_i
         end
     end
 
@@ -136,5 +180,10 @@ class ToyRobot
     def placed?
         # check if we currently have everything we need for our current_position
         return !@current_position[:x].nil? && !@current_position[:y].nil? && !@current_position[:direction].nil?
+    end
+
+    # Function to determine if string is a number
+    def is_numeric?(value)
+        !!Float(value) rescue false 
     end
 end
