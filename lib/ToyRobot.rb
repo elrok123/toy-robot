@@ -124,6 +124,8 @@ class ToyRobot
     def report
         # Check that we have been placed
         if self.placed?
+            puts "The robot is currently in position (#{@current_position[:x]}, #{@current_position[:y]}) facing #{@current_position[:direction]}..."
+            return true
         else
             puts "The Toy Robot has not been placed, skipping command..."
             return false
