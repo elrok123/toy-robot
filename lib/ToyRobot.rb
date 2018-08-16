@@ -59,8 +59,14 @@ class ToyRobot
 
     # Function to rotate the Toy Robot based on current orientation
     def rotate(direction_to_rotate)
-        @current_position[:direction] = self.get_direction_constant[direction_to_rotate] 
-        puts "The Toy Robot has rotated to face #{@current_position[:direction]}"
+        # Check that we have been placed
+        if self.placed?
+            @current_position[:direction] = self.get_direction_constant[direction_to_rotate] 
+            puts "The Toy Robot has rotated to face #{@current_position[:direction]}"
+        else
+            puts "The Toy Robot has not been placed, skipping command..."
+            return false
+        end
     end
     
     # Function to move the robot 1 square in the direction it's currently facing
@@ -79,9 +85,9 @@ class ToyRobot
             if @table.valid_destination new_position[:x], new_position[:y]
                 # Set our new valid position
                 @current_position = new_position 
-                puts "The robot has moved to (#{@current_position[:x]}, #{@current_position[:y]}) facing #{@current_position[:direction]}..."
+                puts "The Toy Robot has moved to (#{@current_position[:x]}, #{@current_position[:y]}) facing #{@current_position[:direction]}..."
             else
-                puts "The robot cannot move any further, position unchanged, skipping command..."
+                puts "The Toy Robot cannot move any further, position unchanged, skipping command..."
                 return false
             end
         else
