@@ -126,7 +126,6 @@ class ToyRobot
 
             # Calculate our new position operating on the correct coordinate with the correct operation using the constants we have on the class
             new_position[direction_constant[:coordinate]] = new_position[direction_constant[:coordinate]] + direction_constant[:operation_value] 
-            puts new_position
             # Check if the new position is valid move to this position
             if @table.valid_destination new_position[:x], new_position[:y]
                 # Set our new valid position
