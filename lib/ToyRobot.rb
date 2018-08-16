@@ -75,7 +75,7 @@ class ToyRobot
             # Check if the second paramater is numberic and if so use that as our y coord
             if !params[1].nil? 
                 # Strip comma
-                y_coord = params[index+2].to_i 
+                y_coord = params[1].to_i 
             elsif self.is_numeric? command_segments[index+2].tr!(",", "")
                 # If we found the y coord in the next command segment use this
                 y_coord = command_segments[index+2].to_i
@@ -86,8 +86,8 @@ class ToyRobot
             end
 
             # Check if we have a direction to face as well
-            if !params[2].nil? && !params[2] == ""
-                direction = params[2].tr(" ")
+            if !params[2].nil?
+                direction = params[2].tr(" ", "")
                 return {x: x_coord, y: y_coord, direction: direction}
             elsif command_segments[index+3] == "NORTH" || command_segments[index+3] == "EAST" || command_segments[index+3] == "SOUTH" || command_segments[index+3] == "WEST"
                 direction = command_segments[index+3]
@@ -97,7 +97,8 @@ class ToyRobot
                 return false
             end
         else
-            command_segments[i+1].tr(",", "").tr(" ", "").to_i
+            puts "Invalid PLACE command, skipping command..."
+            return false
         end
     end
 
@@ -118,13 +119,14 @@ class ToyRobot
         # Check that we have been placed
         if self.placed?
             # Create a new version to hold our new position for validation later
-            new_position = @current_position
+            new_position = @current_position.dup
             
             # Get our direction constant to establish whether we want to operate on the X or Y co-ordinate and whether to subtract or add based on direction
             direction_constant = self.get_direction_constant
 
             # Calculate our new position operating on the correct coordinate with the correct operation using the constants we have on the class
             new_position[direction_constant[:coordinate]] = new_position[direction_constant[:coordinate]] + direction_constant[:operation_value] 
+            puts new_position
             # Check if the new position is valid move to this position
             if @table.valid_destination new_position[:x], new_position[:y]
                 # Set our new valid position
