@@ -6,8 +6,8 @@ class Table
 
     # Function to check if a destination is a valid place on the table
     def valid_destination(x_position, y_position)
-        if x_position > 0 && x_position < @max_x
-            if y_position > 0 && y_position < @max_y
+        if x_position.to_i >= 0 && x_position.to_i <= @max_x
+            if y_position.to_i >= 0 && y_position.to_i <= @max_y
                 return true  
             else
                 puts "Invalid Y position provided..."
